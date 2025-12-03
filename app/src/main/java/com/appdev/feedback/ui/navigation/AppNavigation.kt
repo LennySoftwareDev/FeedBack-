@@ -28,7 +28,7 @@ fun AppNavigation(activity: ComponentActivity) {
             SocialMediaPostsScreen(navController)
         }
         composable(route = Screen.PostCommentsScreen.route) {
-            PostCommentsScreen()
+            PostCommentsScreen(navController)
         }
     }
 }

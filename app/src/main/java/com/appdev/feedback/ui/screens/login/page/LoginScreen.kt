@@ -44,6 +44,8 @@ fun LoginScreen(
             false -> {
                 Toast.makeText(context, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show()
             }
+
+            null -> {}
         }
     }
 }

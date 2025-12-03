@@ -1,7 +1,9 @@
 package com.appdev.feedback.ui.screens.postcomments.content
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -25,8 +27,17 @@ import com.appdev.feedback.ui.screens.postcomments.viewmodel.PostCommentViewMode
 fun PostCommentsContent(
     navController: NavController,
     viewModel: PostCommentViewModel = hiltViewModel()
-){
+) {
 
+    Box(modifier = Modifier.fillMaxSize()) {
+
+        FabDialog(
+            Modifier
+                .align(Alignment.BottomEnd)
+                .padding(16.dp),
+            viewModel = viewModel
+        )
+    }
 }
 
 @Composable

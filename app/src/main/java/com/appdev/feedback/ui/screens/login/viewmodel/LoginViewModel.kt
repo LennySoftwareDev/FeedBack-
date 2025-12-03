@@ -22,12 +22,12 @@ class LoginViewModel @Inject constructor(
     private val _isLoginEnabled = MutableStateFlow(false)
     val isLoginEnabled: StateFlow<Boolean> = _isLoginEnabled
 
-    private val _isLoginSuccess = MutableStateFlow(false)
-    val isLogiSuccess: StateFlow<Boolean> = _isLoginSuccess
+    private val _isLoginSuccess = MutableStateFlow<Boolean?>(null)
+    val isLogiSuccess: StateFlow<Boolean?> = _isLoginSuccess
 
-    init {
+    /*init {
         login()
-    }
+    }*/
 
     fun onUsernameChange(username: String) {
         _username.value = username

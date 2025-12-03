@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import com.appdev.feedback.domain.usecase.local.AddPostCommentCase
 import com.appdev.feedback.domain.usecase.local.GetAllCommentsByIdUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -14,9 +16,8 @@ class PostCommentViewModel @Inject constructor(
     private val getAllCommentsByIdUseCase: GetAllCommentsByIdUseCase
 ): ViewModel() {
 
-    private val _showDialog = MutableLiveData<Boolean>()
-    val showDialog: LiveData<Boolean> = _showDialog
-
+    private val _showDialog = MutableStateFlow(false)
+    val showDialog= _showDialog.asStateFlow()
     fun onDialogClose() {
         _showDialog.value = false
     }
