@@ -28,16 +28,23 @@ class ViewModelSocialMediaPosts @Inject constructor(
     private val _searchQuery = MutableStateFlow("")
     val searchQuery = _searchQuery.asStateFlow()
 
+
     private val _posts = getAllUserPostLocalUseCase()
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
+            started = SharingStarted.Eagerly,
             initialValue = emptyList()
         )
     val posts: StateFlow<List<UserPost>> = _posts
 
     init {
-        getSocialMediaPosts()
+        viewModelScope.launch {
+            posts.collect { commentList ->
+                if (commentList.isEmpty()) {
+                    getSocialMediaPosts()
+                }
+            }
+        }
     }
 
     fun getSocialMediaPosts() {

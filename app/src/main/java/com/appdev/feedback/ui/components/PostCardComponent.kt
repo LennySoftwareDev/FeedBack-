@@ -25,7 +25,7 @@ fun PostCard(navController: NavController, post: UserPost) {
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                navController.navigate(Screen.PostCommentsScreen.route)
+                navController.navigate(Screen.PostCommentsScreen.route.plus("/${post.id}"))
             },
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),

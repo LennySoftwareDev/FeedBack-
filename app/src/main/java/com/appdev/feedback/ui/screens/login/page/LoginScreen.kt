@@ -8,6 +8,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.appdev.feedback.ui.navigation.Screen
 import com.appdev.feedback.ui.screens.login.content.LoginContent
+import com.appdev.feedback.ui.screens.login.event.UIEventLogin
 import com.appdev.feedback.ui.screens.login.viewmodel.LoginViewModel
 
 @Composable
@@ -16,6 +17,7 @@ fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
+    val eventFlow = viewModel.eventFlow.collectAsState(initial = null)
     val username by viewModel.username.collectAsState()
     val password by viewModel.password.collectAsState()
     val isLoginEnabled by viewModel.isLoginEnabled.collectAsState()
@@ -33,19 +35,21 @@ fun LoginScreen(
         }
     )
 
-    LaunchedEffect(isLoginSuccess) {
-        when (isLoginSuccess) {
-            true -> {
-                navController.navigate(Screen.SocialMediaPostsScreen.route) {
-                    popUpTo(Screen.LoginScreen.route) { inclusive = true }
-                    popUpTo (Screen.SplashScreen.route) {inclusive = true}
+    LaunchedEffect(true) {
+        viewModel.eventFlow.collect { event ->
+
+            when (event) {
+                is UIEventLogin.ShowToast -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                }
+
+                is UIEventLogin.LoginSuccess -> {
+                    navController.navigate(Screen.SocialMediaPostsScreen.route) {
+                        popUpTo(Screen.LoginScreen.route) { inclusive = true }
+                        popUpTo(Screen.SplashScreen.route) { inclusive = true }
+                    }
                 }
             }
-            false -> {
-                Toast.makeText(context, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show()
-            }
-
-            null -> {}
         }
     }
 }

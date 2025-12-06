@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import com.appdev.feedback.data.local.database.entities.PostCommentEntity
 import com.appdev.feedback.data.local.database.entities.UserPostEntity
 
-@Database(entities = [UserPostEntity::class, PostCommentEntity::class], version = 1)
+@Database(entities = [UserPostEntity::class, PostCommentEntity::class], version = 6)
 abstract class UserPostDataBase : RoomDatabase() {
     abstract fun userPostDao(): UserPostDao
 }

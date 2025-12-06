@@ -6,13 +6,14 @@ import com.appdev.feedback.ui.models.PostComment
 
 fun PostCommentDto.toPostCommentEntity(): PostCommentEntity{
     return PostCommentEntity(
+        commentId = 0,
         postId = this.postId,
         body = this.body
     )
 }
 
 fun PostCommentEntity.toPostComment(): PostComment = PostComment(
-    commentId = this.commentId,
+    id = this.commentId,
     postId = this.postId,
     body = this.body
 )

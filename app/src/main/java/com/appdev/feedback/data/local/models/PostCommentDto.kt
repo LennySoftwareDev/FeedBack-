@@ -1,7 +1,8 @@
 package com.appdev.feedback.data.local.models
 
+import androidx.collection.emptyIntSet
+
 data class PostCommentDto (
-    val commentId: Int,
     val postId: Int,
     val body: String
 )

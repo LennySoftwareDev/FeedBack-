@@ -12,7 +12,6 @@ import androidx.room.PrimaryKey
             entity = UserPostEntity::class,
             parentColumns = ["id"],
             childColumns = ["postId"],
-            onDelete = ForeignKey.CASCADE
         )
     ],
     indices = [Index("postId")]

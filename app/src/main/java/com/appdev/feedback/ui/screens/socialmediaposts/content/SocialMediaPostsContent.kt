@@ -43,10 +43,6 @@ fun SocialMediaPostsContent(
         viewModel.filterDatabaseListUserPost(posts, searchQuery)
     }
 
-    LaunchedEffect(true) {
-        viewModel.posts
-    }
-
     Column(
         modifier = Modifier
             .fillMaxSize()

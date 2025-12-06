@@ -27,7 +27,7 @@ fun SocialMediaPostsScreen(
         }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
-            SocialMediaPostsContent(navController,viewModel)
+            SocialMediaPostsContent(navController)
         }
     }
 }

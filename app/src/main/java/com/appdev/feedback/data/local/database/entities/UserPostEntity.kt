@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
     tableName = "user_post"
 )
 data class UserPostEntity (
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     val id: Int = 0,
     val userId: Int,
     val title: String,

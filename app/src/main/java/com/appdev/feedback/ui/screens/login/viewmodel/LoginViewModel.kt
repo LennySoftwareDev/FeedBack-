@@ -3,9 +3,12 @@ package com.appdev.feedback.ui.screens.login.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.appdev.feedback.data.datastore.repository.DataStoreRepository
+import com.appdev.feedback.ui.screens.login.event.UIEventLogin
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -13,6 +16,10 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val dataStoreRepository: DataStoreRepository
 ) : ViewModel() {
+
+    private val _eventFlow = MutableSharedFlow<UIEventLogin>()
+    val eventFlow = _eventFlow.asSharedFlow()
+
     private val _username = MutableStateFlow("")
     val username: StateFlow<String> = _username
 
@@ -25,9 +32,6 @@ class LoginViewModel @Inject constructor(
     private val _isLoginSuccess = MutableStateFlow<Boolean?>(null)
     val isLogiSuccess: StateFlow<Boolean?> = _isLoginSuccess
 
-    /*init {
-        login()
-    }*/
 
     fun onUsernameChange(username: String) {
         _username.value = username
@@ -49,6 +53,12 @@ class LoginViewModel @Inject constructor(
             val savedPass = dataStoreRepository.getString("password")
 
             _isLoginSuccess.value = _username.value == savedUser && _password.value == savedPass
+
+            if (_isLoginSuccess.value == true){
+                _eventFlow.emit(UIEventLogin.LoginSuccess)
+            }else{
+                _eventFlow.emit(UIEventLogin.ShowToast("Usuario o contraseña incorrectos"))
+            }
         }
     }
 }
