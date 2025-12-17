@@ -2,7 +2,6 @@ package com.appdev.feedback.di
 
 import android.content.Context
 import androidx.room.Room
-import androidx.room.TypeConverters
 import com.appdev.feedback.data.local.database.dao.UserPostDao
 import com.appdev.feedback.data.local.database.dao.UserPostDataBase
 import dagger.Module

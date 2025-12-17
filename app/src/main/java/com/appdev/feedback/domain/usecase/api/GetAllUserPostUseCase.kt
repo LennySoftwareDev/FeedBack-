@@ -5,6 +5,6 @@ import javax.inject.Inject
 
 class GetAllUserPostUseCase @Inject constructor(
     private val repository: ApiPostRepository
-){
-    suspend operator fun invoke() = repository.getAllUsersPublications()
+) {
+    operator fun invoke() = repository.getAllUsersPublications()
 }

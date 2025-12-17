@@ -17,7 +17,7 @@ fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
-    val eventFlow = viewModel.eventFlow.collectAsState(initial = null)
+    //val eventFlow = viewModel.eventFlow.collectAsState(initial = null)
     val username by viewModel.username.collectAsState()
     val password by viewModel.password.collectAsState()
     val isLoginEnabled by viewModel.isLoginEnabled.collectAsState()
@@ -43,11 +43,15 @@ fun LoginScreen(
                     Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
                 }
 
-                is UIEventLogin.LoginSuccess -> {
-                    navController.navigate(Screen.SocialMediaPostsScreen.route) {
-                        popUpTo(Screen.LoginScreen.route) { inclusive = true }
-                        popUpTo(Screen.SplashScreen.route) { inclusive = true }
+                is UIEventLogin.Navigate -> {
+                    if (event.screen == Screen.SocialMediaPostsScreen.route) {
+                        navController.navigate(event.screen)
+                        {
+                            popUpTo(Screen.LoginScreen.route) { inclusive = true }
+                            popUpTo(Screen.SplashScreen.route) { inclusive = true }
+                        }
                     }
+
                 }
             }
         }

@@ -9,7 +9,7 @@ import javax.inject.Inject
 class ApiPostRepository @Inject constructor(
     private val apiService: ApiPostUserServiceImpl
 ) {
-    suspend fun getAllUsersPublications(): ApiResult<Flow<List<UserPostDto>>> {
+    fun getAllUsersPublications(): Flow<ApiResult<List<UserPostDto>>> {
         return apiService.getAllPostUsers()
     }
 }

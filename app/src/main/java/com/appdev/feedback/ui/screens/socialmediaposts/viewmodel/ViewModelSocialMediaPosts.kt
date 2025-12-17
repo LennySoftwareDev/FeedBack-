@@ -2,11 +2,15 @@ package com.appdev.feedback.ui.screens.socialmediaposts.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.appdev.feedback.data.local.mapper.toUserPostEntity
 import com.appdev.feedback.domain.usecase.api.GetAllUserPostUseCase
 import com.appdev.feedback.domain.usecase.local.AddUserPostUseCase
 import com.appdev.feedback.domain.usecase.local.GetAllUserPostLocalUseCase
 import com.appdev.feedback.ui.models.UserPost
+import com.appdev.feedback.ui.screens.socialmediaposts.event.UIEventSocialMediaPost
+import com.appdev.feedback.utils.apiresult.ApiResult
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -19,15 +23,18 @@ import javax.inject.Inject
 class ViewModelSocialMediaPosts @Inject constructor(
     private val getSocialMediaPostsUseCase: GetAllUserPostUseCase,
     private val addSocialMediaPostUseCase: AddUserPostUseCase,
-    private val getAllUserPostLocalUseCase: GetAllUserPostLocalUseCase
+    getAllUserPostLocalUseCase: GetAllUserPostLocalUseCase
 ) : ViewModel() {
+
+    private val _eventFlow =
+        MutableStateFlow<UIEventSocialMediaPost>(UIEventSocialMediaPost.Loading)
+    val eventFlow = _eventFlow.asStateFlow()
 
     private val _isLoadingUsers = MutableStateFlow(false)
     val isLoadingUsers = _isLoadingUsers.asStateFlow()
 
     private val _searchQuery = MutableStateFlow("")
     val searchQuery = _searchQuery.asStateFlow()
-
 
     private val _posts = getAllUserPostLocalUseCase()
         .stateIn(
@@ -38,26 +45,24 @@ class ViewModelSocialMediaPosts @Inject constructor(
     val posts: StateFlow<List<UserPost>> = _posts
 
     init {
-        viewModelScope.launch {
-            posts.collect { commentList ->
-                if (commentList.isEmpty()) {
-                    getSocialMediaPosts()
-                }
-            }
-        }
+       getSocialMediaPosts()
     }
 
     fun getSocialMediaPosts() {
-        _isLoadingUsers.value = true
-        viewModelScope.launch {
-            if (_posts.value.isEmpty()) {
-                val dataUserFromApi = getSocialMediaPostsUseCase()
-                dataUserFromApi.response?.collect {
-                    it.forEach { userPostDto ->
-                        addSocialMediaPostUseCase(userPostDto)
+        viewModelScope.launch(Dispatchers.IO) {
+            getSocialMediaPostsUseCase().collect { result ->
+                when (result) {
+                    is ApiResult.Loading -> _eventFlow.value = UIEventSocialMediaPost.Loading
+                    is ApiResult.Error -> _eventFlow.value =
+                        UIEventSocialMediaPost.Error("No hay publicaciones")
+
+                    is ApiResult.Success -> {
+                        result.data.forEach { userPost ->
+                            addSocialMediaPostUseCase(userPost)
+                        }
+                        _eventFlow.value = UIEventSocialMediaPost.UserPostData(_posts.value)
                     }
                 }
-                _isLoadingUsers.value = false
             }
         }
     }
